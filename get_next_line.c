@@ -6,14 +6,13 @@
 /*   By: lgrudler <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 20:50:38 by lgrudler          #+#    #+#             */
-/*   Updated: 2018/11/28 21:30:04 by lgrudler         ###   ########.fr       */
+/*   Updated: 2018/11/29 17:53:19 by lgrudler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <unistd.h>
 
-// Test fcts lire une ligne
 char *readline(int fd, char *str)
 {
 	char buf[BUFF_SIZE + 1];
@@ -24,9 +23,9 @@ char *readline(int fd, char *str)
 	{
 		buf[ret] = '\0';
 		temp = str;
-		str = ft_strjoin(temp, buf);
-		if (str == NULL)
+		if (!(str = ft_strjoin(temp, buf)))
  			return (NULL);
+		free(temp);
 	}
 	return (str);
 }
@@ -36,20 +35,25 @@ int	get_next_line(const int fd, char **line)
 	static char *str;
 	char *temp;
 	int i;
+	int j;
 
+	j = 0;
 	i = 0;
-	if (fd == -1)
-		return (-1);
+	if (!(str))
+		if (!(str = ft_strnew(100000)))
+				return (-1);
 	temp = str;
 	str = readline(fd, temp);
 	if (str[i])
 	{
 		while (str[i] != '\n')
 			i++;
-		*line = ft_strsub(str, 0, i);
-		if (*line == NULL)	
+		if (!(*line = ft_strsub(str, 0, i)))
 			return (-1);
-		str = &str[i + 1];
+		while (str[i])
+			str[j++] = str[i++];
+		while (str[j])
+			str[j++] = '\0';
 	}
 	return (0);
 }
