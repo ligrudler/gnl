@@ -6,7 +6,7 @@
 /*   By: lgrudler <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 20:50:38 by lgrudler          #+#    #+#             */
-/*   Updated: 2018/11/29 17:53:19 by lgrudler         ###   ########.fr       */
+/*   Updated: 2018/12/01 18:08:36 by lgrudler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,8 @@ int	get_next_line(const int fd, char **line)
 			i++;
 		if (!(*line = ft_strsub(str, 0, i)))
 			return (-1);
-		while (str[i])
-			str[j++] = str[i++];
-		while (str[j])
-			str[j++] = '\0';
+		str = &str[i + 1];
+		return (1);
 	}
 	return (0);
 }
