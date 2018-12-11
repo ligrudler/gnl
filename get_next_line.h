@@ -6,7 +6,7 @@
 /*   By: lgrudler <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 14:35:44 by lgrudler          #+#    #+#             */
-/*   Updated: 2018/11/29 17:32:04 by lgrudler         ###   ########.fr       */
+/*   Updated: 2018/12/10 17:44:13 by lgrudler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "./libft/libft.h"
 
-# define BUFF_SIZE 30
+# define BUFF_SIZE 10
 
 int	get_next_line(const int fd, char **line);
 

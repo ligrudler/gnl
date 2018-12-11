@@ -6,7 +6,7 @@
 /*   By: lgrudler <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/28 19:26:02 by lgrudler          #+#    #+#             */
-/*   Updated: 2018/11/29 17:42:22 by lgrudler         ###   ########.fr       */
+/*   Updated: 2018/12/11 17:43:56 by lgrudler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-void ft_exit(const char *str)
+void	ft_exit(const char *str)
 {
 	if (str)
 		ft_putendl(str);
 	exit(1);
 }
 
-int main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
-	char *line;
-	int fd;
-	int code;
-	int len;
-	int i;
+	char	*line;
+	int		fd;
+	int		code;
+	int		len;
+	int		i;
 
 	i = 1;
 	printf("BUFF_SIZE = %d\n", BUFF_SIZE);

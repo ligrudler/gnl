@@ -1,62 +1,78 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lgrudler <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/26 20:50:38 by lgrudler          #+#    #+#             */
-/*   Updated: 2018/12/03 22:50:50 by lgrudler         ###   ########.fr       */
+/*   Created: 2018/12/11 16:20:12 by lgrudler          #+#    #+#             */
+/*   Updated: 2018/12/11 23:35:30 by lgrudler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <unistd.h>
 
-char *readline(int fd, char *str)
+char	*ft_strjoin_gnl(char const *s1, char const *s2)
 {
-	char buf[BUFF_SIZE + 1];
-	char *temp;
-	int ret;
+	char	*str;
+	int		l1;
+	int		l2;
 
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
-	{
-		buf[ret] = '\0';
-		temp = str;
-		free(str);
-		if (!(str = ft_strjoin(temp, buf)))
- 			return (NULL);
-	}
+	l1 = (s1)?ft_strlen(s1):0;
+	l2 = (s2)?ft_strlen(s2):0;
+	if (!(str = (char *)malloc(sizeof(char) * (l1 + l2 + 1))))
+		return (NULL);
+	ft_memcpy(str, s1, l1);
+	ft_memcpy(str + l1, s2, l2);
+	str[l1 + l2] = '\0';
 	return (str);
 }
 
-int	get_next_line(const int fd, char **line)
+int		jbouille(char **str, char **line)
 {
-	static char *str;
-	char *temp;
-	int i;
-	int j;
+	char *tmp;
 
-	j = 0;
-	i = 0;
-	if (fd == -1 || line == NULL)
-		return (-1);
-	if (!(str))
-		if (!(str = ft_strnew(100000)))
-				return (-1);
-	temp = str;
-	str = readline(fd, temp);
-	if (str[i])
+	if (*str && (tmp = ft_strchr(*str, '\n')) != NULL)
 	{
-		while (str[i] != '\n' && str[i] != '\0')
-			i++;
-		if (i == 0)
-			*line = ft_strdup(" ");
-		if (!(*line = ft_strsub(str, 0, i)))
-			return (-1);
-		str = &str[i + 1];
+		tmp[0] = '\0';
+		*line = ft_strdup(*str);
+		tmp = ft_strdup(tmp + 1);
+		free(*str);
+		*str = tmp;
 		return (1);
 	}
 	return (0);
 }
 
+int		get_next_line(const int fd, char **line)
+{
+	static char *str = NULL;
+	int ret;
+	char buf[BUFF_SIZE + 1];
+	char *temp;
+
+	if (fd <= -1 || line == NULL)
+		return (-1);
+	if (jbouille(&str, line))
+		return (1);
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		buf[ret]= '\0';
+		temp = str;
+		if(!(str = ft_strjoin_gnl(temp, buf)))
+			return (-1);
+		free(temp);
+		if (jbouille(&str, line))
+			return (1);
+	}
+	if (ret == -1)
+		return (-1);
+	if (str == NULL)
+	{
+		*line = ft_strdup(str);
+		free(str);
+		str = NULL;
+		return(1);
+	}
+	return (0);
+}
