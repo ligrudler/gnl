@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line3.c                                   :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lgrudler <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 16:20:12 by lgrudler          #+#    #+#             */
-/*   Updated: 2018/12/11 23:35:30 by lgrudler         ###   ########.fr       */
+/*   Updated: 2018/12/16 16:59:53 by lgrudler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ char	*ft_strjoin_gnl(char const *s1, char const *s2)
 	int		l1;
 	int		l2;
 
-	l1 = (s1)?ft_strlen(s1):0;
-	l2 = (s2)?ft_strlen(s2):0;
+	l1 = (s1) ? ft_strlen(s1) : 0;
+	l2 = (s2) ? ft_strlen(s2) : 0;
 	if (!(str = (char *)malloc(sizeof(char) * (l1 + l2 + 1))))
 		return (NULL);
 	ft_memcpy(str, s1, l1);
@@ -28,7 +28,7 @@ char	*ft_strjoin_gnl(char const *s1, char const *s2)
 	return (str);
 }
 
-int		jbouille(char **str, char **line)
+int		wallah(char **str, char **line, int ret)
 {
 	char *tmp;
 
@@ -39,6 +39,11 @@ int		jbouille(char **str, char **line)
 		tmp = ft_strdup(tmp + 1);
 		free(*str);
 		*str = tmp;
+		if (ret <= BUFF_SIZE && tmp[0] == '\0')
+		{
+			free(*str);
+			*str = NULL;
+		}
 		return (1);
 	}
 	return (0);
@@ -46,33 +51,33 @@ int		jbouille(char **str, char **line)
 
 int		get_next_line(const int fd, char **line)
 {
-	static char *str = NULL;
-	int ret;
-	char buf[BUFF_SIZE + 1];
-	char *temp;
+	static char	*str = NULL;
+	int			ret;
+	char		buf[BUFF_SIZE + 1];
+	char		*temp;
 
 	if (fd <= -1 || line == NULL)
 		return (-1);
-	if (jbouille(&str, line))
+	if (wallah(&str, line, 1))
 		return (1);
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
-		buf[ret]= '\0';
+		buf[ret] = '\0';
 		temp = str;
-		if(!(str = ft_strjoin_gnl(temp, buf)))
+		if (!(str = ft_strjoin_gnl(temp, buf)))
 			return (-1);
 		free(temp);
-		if (jbouille(&str, line))
+		if (wallah(&str, line, ret))
 			return (1);
 	}
-	if (ret == -1)
+	if (ret <= -1)
 		return (-1);
-	if (str == NULL)
+	if (str != NULL)
 	{
 		*line = ft_strdup(str);
 		free(str);
 		str = NULL;
-		return(1);
+		return (1);
 	}
 	return (0);
 }
