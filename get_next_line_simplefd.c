@@ -6,7 +6,7 @@
 /*   By: lgrudler <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 16:20:12 by lgrudler          #+#    #+#             */
-/*   Updated: 2018/12/19 14:57:08 by lgrudler         ###   ########.fr       */
+/*   Updated: 2018/12/17 15:48:15 by lgrudler         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,28 +63,28 @@ int		lastboucle(char **str, char **line)
 
 int		get_next_line(const int fd, char **line)
 {
-	static char	*str[10240];
+	static char	*str = NULL;
 	int			ret;
 	char		buf[BUFF_SIZE + 1];
 	char		*temp;
 
-	if (fd <= -1  || fd > 10240 || line == NULL || BUFF_SIZE <= 0)
+	if (fd <= -1 || line == NULL || BUFF_SIZE <= 0)
 		return (-1);
-	if (stockvariable(&str[fd], line))
+	if (stockvariable(&str, line))
 		return (1);
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
-		temp = str[fd];
-		if (!(str[fd] = ft_strjoin_gnl(temp, buf)))
+		temp = str;
+		if (!(str = ft_strjoin_gnl(temp, buf)))
 			return (-1);
 		free(temp);
-		if (stockvariable(&str[fd], line))
+		if (stockvariable(&str, line))
 			return (1);
 	}
 	if (ret <= -1)
 		return (-1);
-	if (lastboucle(&str[fd], line) == 1)
+	if (lastboucle(&str, line) == 1)
 		return (1);
 	return (0);
 }
